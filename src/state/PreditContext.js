@@ -16,7 +16,7 @@ const initialState = {
   customers: clone(initialCustomers),
   search: '',
   aiPlanCollapsed: false,
-  trackingUi: {}, // { [vin]: { historyVisible, draftVisible, draftIndex, editing, draftText } }
+  trackingUi: {}, // { [vin]: { expanded, historyVisible, draftVisible, draftIndex, editing, draftText } }
   toast: null, // { message, id }
 };
 
@@ -62,7 +62,7 @@ function reducer(state, action) {
         ...c,
         approach: { ...c.approach, status: 'deferred', deferredFrom: c.approach.status },
       }));
-      return updateUi(next, action.vin, () => ({}));
+      return updateUi(next, action.vin, (ui) => ({ expanded: ui.expanded }));
     }
     case 'resume':
       return updateCustomer(state, action.vin, (c) => {
@@ -80,8 +80,13 @@ function reducer(state, action) {
         },
       }));
       // fecha o rascunho e já mostra o histórico com a mensagem enviada
-      return updateUi(next, action.vin, () => ({ historyVisible: true }));
+      return updateUi(next, action.vin, (ui) => ({ expanded: ui.expanded, historyVisible: true }));
     }
+
+    case 'toggleExpanded':
+      return updateUi(state, action.vin, (ui) => ({ ...ui, expanded: !ui.expanded }));
+    case 'expand':
+      return updateUi(state, action.vin, { expanded: true });
 
     case 'toggleHistory':
       return updateUi(state, action.vin, (ui) => ({ ...ui, historyVisible: !ui.historyVisible }));
@@ -187,6 +192,8 @@ export function PreditProvider({ children }) {
         showToast(`Agente de IA Predit enviou a mensagem para ${c.name}.`);
       },
 
+      toggleExpanded: (vin) => dispatch({ type: 'toggleExpanded', vin }),
+      expand: (vin) => dispatch({ type: 'expand', vin }),
       toggleHistory: (vin) => dispatch({ type: 'toggleHistory', vin }),
       showDraft: (vin) => dispatch({ type: 'showDraft', vin }),
       nextDraft: (vin) => {

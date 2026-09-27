@@ -1,4 +1,5 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { LayoutAnimation, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { getDrafts } from '../data/drafts';
 import { usePredit } from '../state/PreditContext';
 import { colors, fonts, radius, radiusSm, type } from '../theme';
@@ -10,7 +11,19 @@ import { APPROACH_BADGE } from './CustomerRow';
 // Card de acompanhamento (Documentacao.md 6.4). Diferente do web:
 // - todo status ativo tem o compositor (Gerar mensagem / Editar / Gerar outra / Enviar), não só needs_human;
 // - "Enviar" é simulado: a mensagem entra no histórico como enviada pelo Agente IA (sem WhatsApp);
-// - caso repassado (deferred) pode ser retomado.
+// - caso repassado (deferred) pode ser retomado;
+// - card começa recolhido (cabeçalho + prévia) para a lista ser fácil de percorrer; toque expande.
+
+// Uma linha que resume o caso quando o card está recolhido
+function previewText(customer) {
+  const { approach } = customer;
+  if (approach.status === 'needs_human') return `Pediu apoio: ${approach.handoff.trigger}`;
+  if (approach.status === 'deferred') return 'Caso repassado para outro consultor.';
+  if (approach.status === 'done') return approach.outcome ?? 'Abordagem concluída.';
+  const last = approach.log.at(-1);
+  return last ? `${chatBubbleLabel(last, customer)}: “${last.text}”` : 'Aguardando resposta do cliente.';
+}
+
 export default function TrackCard({ customer, onLayout }) {
   const { state, actions } = usePredit();
   const { approach } = customer;
@@ -18,17 +31,44 @@ export default function TrackCard({ customer, onLayout }) {
   const vin = customer.vin;
   const badge = APPROACH_BADGE[approach.status];
   const deferred = approach.status === 'deferred';
+  const expanded = !!ui.expanded;
+
+  const toggle = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    actions.toggleExpanded(vin);
+  };
 
   return (
     <View onLayout={onLayout} style={[styles.card, approach.status === 'needs_human' && styles.needsHuman]}>
-      <View style={styles.head}>
-        <Badge variant={badge.variant} label={badge.label} />
-        <Text style={styles.name}>{customer.name}</Text>
-        <Text style={styles.sub}>
-          {customer.model} · Score {customer.score}%
-        </Text>
-      </View>
+      <Pressable onPress={toggle} style={({ pressed }) => [styles.head, pressed && styles.headPressed]}>
+        <View style={styles.headText}>
+          <Badge variant={badge.variant} label={badge.label} />
+          <Text style={styles.name}>{customer.name}</Text>
+          <Text style={styles.sub}>
+            {customer.model} · Score {customer.score}%
+          </Text>
+        </View>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={colors.muted} />
+      </Pressable>
 
+      {!expanded ? (
+        <Text style={styles.preview} numberOfLines={2} onPress={toggle}>
+          {previewText(customer)}
+        </Text>
+      ) : (
+        <ExpandedBody customer={customer} ui={ui} deferred={deferred} />
+      )}
+    </View>
+  );
+}
+
+function ExpandedBody({ customer, ui, deferred }) {
+  const { actions } = usePredit();
+  const { approach } = customer;
+  const vin = customer.vin;
+
+  return (
+    <>
       {approach.status === 'needs_human' && <HandoffInfo handoff={approach.handoff} />}
       {approach.status === 'in_progress' && <LastMessage customer={customer} />}
       {approach.status === 'done' && <Text style={styles.outcome}>{approach.outcome ?? 'Abordagem concluída.'}</Text>}
@@ -51,7 +91,7 @@ export default function TrackCard({ customer, onLayout }) {
       {ui.draftVisible && !deferred && <DraftComposer customer={customer} ui={ui} />}
 
       {ui.historyVisible && <ChatHistory customer={customer} />}
-    </View>
+    </>
   );
 }
 
@@ -154,12 +194,15 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
     borderWidth: 1,
     borderRadius: radius,
-    padding: 16,
-    marginBottom: 12,
+    padding: 14,
+    marginBottom: 10,
   },
   needsHuman: { borderColor: colors.red + '88' },
-  head: { gap: 4, marginBottom: 10 },
+  head: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 },
+  headPressed: { opacity: 0.7 },
+  headText: { flex: 1, gap: 4 },
   name: { fontFamily: fonts.bold, fontSize: 17, color: colors.text, marginTop: 6 },
+  preview: { fontFamily: fonts.regular, fontSize: 13, color: colors.muted, lineHeight: 19 },
   sub: { fontFamily: fonts.regular, fontSize: 13, color: colors.muted },
   label: { fontSize: 10, color: colors.dim, marginBottom: 4 },
   block: { marginTop: 8 },
