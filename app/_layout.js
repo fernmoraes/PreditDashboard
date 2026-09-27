@@ -1,11 +1,12 @@
 import {
-  Inter_400Regular,
-  Inter_600SemiBold,
-  Inter_700Bold,
-  Inter_800ExtraBold,
-  useFonts,
-} from '@expo-google-fonts/inter';
+  Barlow_400Regular,
+  Barlow_500Medium,
+  Barlow_600SemiBold,
+  Barlow_700Bold,
+} from '@expo-google-fonts/barlow';
+import { BarlowCondensed_600SemiBold, BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed';
 import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -32,10 +33,12 @@ const navTheme = {
 function AppShell() {
   const { state } = usePredit();
   const [fontsLoaded, fontError] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
-    Inter_700Bold,
-    Inter_800ExtraBold,
+    Barlow_400Regular,
+    Barlow_500Medium,
+    Barlow_600SemiBold,
+    Barlow_700Bold,
+    BarlowCondensed_600SemiBold,
+    BarlowCondensed_700Bold,
   });
   const ready = (fontsLoaded || fontError) && state.ready;
 
@@ -47,18 +50,20 @@ function AppShell() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      {/* Texto claro: o topo de todas as telas é a faixa azul Ford */}
       <StatusBar style="light" />
       <Stack
         screenOptions={{
           contentStyle: { backgroundColor: colors.bg },
-          headerStyle: { backgroundColor: colors.panel },
-          headerTintColor: colors.text,
-          headerTitleStyle: { fontFamily: fonts.semibold },
+          headerStyle: { backgroundColor: colors.brand },
+          headerTintColor: colors.onBrand,
+          headerTitleStyle: { fontFamily: fonts.condensedBold, fontSize: 20 },
           headerShadowVisible: false,
+          headerBackButtonDisplayMode: 'minimal',
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="cliente/[vin]" options={{ title: 'Caso selecionado' }} />
+        <Stack.Screen name="cliente/[vin]" options={{ title: 'Cliente' }} />
       </Stack>
       <Toast />
     </View>

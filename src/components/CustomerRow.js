@@ -1,65 +1,71 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts, radius } from '../theme';
-import { riskColor, riskLevel } from '../utils/risk';
+import { riskColor, riskLabel, riskLevel } from '../utils/risk';
 import Badge from './Badge';
 
-// Status da abordagem mostrado na linha (not_started não mostra nada)
+// Status da abordagem mostrado na linha/card (not_started não mostra nada)
 export const APPROACH_BADGE = {
-  in_progress: { variant: 'blue', label: '● Em andamento' },
-  needs_human: { variant: 'red', label: '● ASSUMIR' },
-  deferred: { variant: 'gray', label: '↪ Repassado' },
-  done: { variant: 'green', label: '✓ Concluído' },
+  in_progress: { variant: 'blue', label: 'Em andamento' },
+  needs_human: { variant: 'solidRed', label: 'Assumir' },
+  deferred: { variant: 'gray', label: 'Repassado' },
+  done: { variant: 'green', label: 'Concluído' },
 };
 
-// Linha da "Fila de prioridade" (Documentacao.md 6.1), empilhada para celular
+// Linha da "Fila de prioridade" (Documentacao.md 6.1): faixa lateral na cor do risco + score em destaque
 export default function CustomerRow({ customer, onPress }) {
-  const color = riskColor(riskLevel(customer.score));
+  const level = riskLevel(customer.score);
+  const color = riskColor(level);
   const status = APPROACH_BADGE[customer.approach.status];
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
-    >
-      <View style={styles.top}>
-        <View style={styles.identity}>
-          <Text style={styles.name}>{customer.name}</Text>
-          <Text style={styles.vin}>{customer.vin}</Text>
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+      <View style={[styles.stripe, { backgroundColor: color }]} />
+
+      <View style={styles.body}>
+        <View style={styles.top}>
+          <Text style={styles.name} numberOfLines={1}>
+            {customer.name}
+          </Text>
+          {status && <Badge variant={status.variant} label={status.label} />}
         </View>
-        <Text style={[styles.score, { color }]}>{customer.score}%</Text>
+        <Text style={styles.meta} numberOfLines={1}>
+          {customer.model} · {customer.dealer.replace('Ford ', '')}
+        </Text>
+        <Text style={styles.action} numberOfLines={2}>
+          {customer.action}
+        </Text>
       </View>
 
-      <Text style={styles.meta}>
-        {customer.model} · {customer.dealer}
-      </Text>
+      <View style={styles.scoreBox}>
+        <Text style={[styles.score, { color }]}>{customer.score}</Text>
+        <Text style={[styles.scoreLabel, { color }]}>{riskLabel(customer.score)}</Text>
+      </View>
 
-      <Text style={styles.action}>
-        <Text style={styles.actionLabel}>Próxima ação: </Text>
-        {customer.action}
-      </Text>
-
-      {status && <Badge variant={status.variant} label={status.label} style={styles.badge} />}
+      <Ionicons name="chevron-forward" size={18} color={colors.dim} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   row: {
-    backgroundColor: colors.panel2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.panel,
     borderColor: colors.line,
     borderWidth: 1,
     borderRadius: radius,
-    padding: 14,
-    gap: 6,
+    paddingRight: 10,
+    overflow: 'hidden',
   },
-  pressed: { borderColor: colors.blue, backgroundColor: colors.panel3 },
-  top: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 },
-  identity: { flex: 1 },
-  name: { fontFamily: fonts.bold, fontSize: 16, color: colors.text },
-  vin: { fontFamily: fonts.regular, fontSize: 12, color: colors.muted, marginTop: 2 },
-  score: { fontFamily: fonts.extrabold, fontSize: 24 },
-  meta: { fontFamily: fonts.regular, fontSize: 14, color: colors.soft },
-  action: { fontFamily: fonts.regular, fontSize: 14, color: colors.soft, lineHeight: 20 },
-  actionLabel: { fontFamily: fonts.semibold, color: colors.muted },
-  badge: { marginTop: 4 },
+  pressed: { backgroundColor: colors.panel2 },
+  stripe: { width: 5, alignSelf: 'stretch' },
+  body: { flex: 1, paddingVertical: 12, paddingLeft: 12, paddingRight: 8, gap: 2 },
+  top: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  name: { flexShrink: 1, fontFamily: fonts.bold, fontSize: 17, color: colors.text },
+  meta: { fontFamily: fonts.medium, fontSize: 14, color: colors.muted },
+  action: { fontFamily: fonts.regular, fontSize: 14, color: colors.soft, lineHeight: 19, marginTop: 2 },
+  scoreBox: { alignItems: 'center', minWidth: 48, marginRight: 4 },
+  score: { fontFamily: fonts.extrabold, fontSize: 30, lineHeight: 32 },
+  scoreLabel: { fontFamily: fonts.condensed, fontSize: 12, textTransform: 'uppercase' },
 });

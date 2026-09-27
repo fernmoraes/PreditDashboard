@@ -20,7 +20,7 @@ const FILTERS = [
 ];
 
 const EMPTY_BY_FILTER = {
-  needs_human: 'Nenhum caso pedindo apoio agora. 🎉',
+  needs_human: 'Nenhum caso pedindo apoio agora.',
   in_progress: 'Nenhuma conversa em andamento.',
   deferred: 'Nenhum caso repassado.',
   done: 'Nenhuma abordagem concluída ainda.',
@@ -81,39 +81,36 @@ export default function AcompanhamentoScreen() {
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Screen ref={scrollRef}>
         <AppHeader
-          title="Acompanhamento de abordagens"
-          subtitle="Veja o que o agente de IA já conversou e onde ele precisa da sua entrada."
+          title="Acompanhamento"
+          subtitle="Conversas em curso e os casos em que o Predit precisa de você."
           onReset={actions.resetDemo}
         />
 
+        {/* Filtros como abas sublinhadas (rolam na horizontal em telas estreitas) */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chips}
-          style={styles.chipsScroll}
+          contentContainerStyle={styles.tabs}
+          style={styles.tabsScroll}
         >
           {FILTERS.map((f) => {
             const selected = filter === f.key;
             const count = counts[f.key] ?? 0;
+            const alert = f.key === 'needs_human' && count > 0;
             return (
               <Pressable
                 key={f.key}
                 onPress={() => setFilter(f.key)}
-                style={[styles.chip, selected && { borderColor: f.color, backgroundColor: colors.panel3 }]}
+                style={[styles.tab, selected && { borderBottomColor: f.color }]}
               >
-                {f.key !== 'all' && <View style={[styles.chipDot, { backgroundColor: f.color }]} />}
-                <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{f.label}</Text>
-                <View style={[styles.count, f.key === 'needs_human' && count > 0 && styles.countAlert]}>
-                  <Text style={[styles.countText, f.key === 'needs_human' && count > 0 && styles.countTextAlert]}>
-                    {count}
-                  </Text>
+                <Text style={[styles.tabText, selected && styles.tabTextSelected]}>{f.label}</Text>
+                <View style={[styles.count, alert && styles.countAlert]}>
+                  <Text style={[styles.countText, alert && styles.countTextAlert]}>{count}</Text>
                 </View>
               </Pressable>
             );
           })}
         </ScrollView>
-
-        <Text style={styles.hint}>Toque em um cliente para ver detalhes e responder.</Text>
 
         {active.length === 0 ? (
           <Text style={styles.empty}>
@@ -134,33 +131,35 @@ export default function AcompanhamentoScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.bg },
-  chipsScroll: { marginHorizontal: -16, marginBottom: 8 },
-  chips: { gap: 8, paddingHorizontal: 16 },
-  chip: {
+  tabsScroll: {
+    marginHorizontal: -16,
+    marginBottom: 12,
+    borderBottomColor: colors.line,
+    borderBottomWidth: 1,
+    flexGrow: 0,
+  },
+  tabs: { gap: 18, paddingHorizontal: 16 },
+  tab: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: colors.panel,
-    borderColor: colors.line,
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingTop: 6,
+    paddingBottom: 10,
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
   },
-  chipDot: { width: 8, height: 8, borderRadius: 4 },
-  chipText: { fontFamily: fonts.semibold, fontSize: 13, color: colors.muted },
-  chipTextSelected: { color: colors.text },
+  tabText: { fontFamily: fonts.condensed, fontSize: 17, color: colors.muted },
+  tabTextSelected: { color: colors.text, fontFamily: fonts.condensedBold },
   count: {
     minWidth: 20,
-    paddingHorizontal: 6,
+    paddingHorizontal: 5,
     paddingVertical: 1,
-    borderRadius: 999,
+    borderRadius: 3,
     backgroundColor: colors.panel3,
     alignItems: 'center',
   },
   countAlert: { backgroundColor: colors.red },
-  countText: { fontFamily: fonts.bold, fontSize: 11, color: colors.soft },
+  countText: { fontFamily: fonts.condensedBold, fontSize: 13, color: colors.soft },
   countTextAlert: { color: '#fff' },
-  hint: { ...type.small, marginBottom: 10 },
   empty: { ...type.body, color: colors.muted, textAlign: 'center', paddingVertical: 24 },
 });

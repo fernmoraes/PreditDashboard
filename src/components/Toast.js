@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -35,6 +36,7 @@ export default function Toast() {
         { opacity: anim, transform: [{ translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [12, 0] }) }] },
       ]}
     >
+      <Ionicons name="checkmark-circle" size={18} color={colors.green} />
       <Text style={styles.text}>{toast.message}</Text>
     </Animated.View>
   );
@@ -45,6 +47,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     backgroundColor: colors.panel2,
     borderColor: colors.lineStrong,
     borderWidth: 1,
@@ -55,5 +60,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     ...shadow,
   },
-  text: { fontFamily: fonts.semibold, fontSize: 14, color: colors.text },
+  text: { flex: 1, fontFamily: fonts.medium, fontSize: 14, color: colors.text, lineHeight: 19 },
 });

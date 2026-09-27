@@ -4,14 +4,13 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import AppHeader from '../../src/components/AppHeader';
 import CustomerRow from '../../src/components/CustomerRow';
-import Panel from '../../src/components/Panel';
 import Screen from '../../src/components/Screen';
 import { useCustomers, usePredit } from '../../src/state/PreditContext';
 import { colors, fonts, radiusSm, type } from '../../src/theme';
 
 const LEGEND = [
-  { label: 'Alto', color: colors.red },
-  { label: 'Médio', color: colors.yellow },
+  { label: 'Alto ≥75', color: colors.red },
+  { label: 'Médio ≥55', color: colors.yellow },
   { label: 'Baixo', color: colors.green },
 ];
 
@@ -23,17 +22,17 @@ export default function ClientesScreen() {
   return (
     <Screen>
       <AppHeader
-        title="Retenção preditiva por VIN"
-        subtitle="Identifique clientes em risco e acione a próxima melhor ação."
+        title="Clientes em risco"
+        subtitle="Quem tem mais chance de sair da rede, e o que fazer a seguir."
         onReset={actions.resetDemo}
       />
 
       <View style={styles.search}>
-        <Ionicons name="search" size={18} color={colors.dim} />
+        <Ionicons name="search" size={18} color={colors.muted} />
         <TextInput
           value={state.search}
           onChangeText={actions.setSearch}
-          placeholder="Buscar cliente, VIN ou modelo"
+          placeholder="Nome, VIN, modelo ou concessionária"
           placeholderTextColor={colors.dim}
           style={styles.searchInput}
           autoCorrect={false}
@@ -44,32 +43,32 @@ export default function ClientesScreen() {
         ) : null}
       </View>
 
-      <Panel>
-        <Text style={type.eyebrow}>Fila de prioridade</Text>
-        <Text style={[type.h2, styles.title]}>Clientes com maior risco de evasão</Text>
-
+      <View style={styles.listHead}>
+        <Text style={styles.count}>
+          {customers.length} {customers.length === 1 ? 'cliente' : 'clientes'} · maior risco primeiro
+        </Text>
         <View style={styles.legend}>
           {LEGEND.map((item) => (
             <View key={item.label} style={styles.legendItem}>
-              <View style={[styles.dot, { backgroundColor: item.color }]} />
+              <View style={[styles.swatch, { backgroundColor: item.color }]} />
               <Text style={styles.legendText}>{item.label}</Text>
             </View>
           ))}
         </View>
+      </View>
 
-        <View style={styles.list}>
-          {customers.map((customer) => (
-            <CustomerRow
-              key={customer.vin}
-              customer={customer}
-              onPress={() => router.push(`/cliente/${customer.vin}`)}
-            />
-          ))}
-          {customers.length === 0 && (
-            <Text style={styles.empty}>Nenhum cliente encontrado para “{state.search}”.</Text>
-          )}
-        </View>
-      </Panel>
+      <View style={styles.list}>
+        {customers.map((customer) => (
+          <CustomerRow
+            key={customer.vin}
+            customer={customer}
+            onPress={() => router.push(`/cliente/${customer.vin}`)}
+          />
+        ))}
+        {customers.length === 0 && (
+          <Text style={styles.empty}>Nenhum cliente encontrado para “{state.search}”.</Text>
+        )}
+      </View>
     </Screen>
   );
 }
@@ -80,24 +79,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     backgroundColor: colors.panel,
-    borderColor: colors.line,
+    borderColor: colors.lineStrong,
     borderWidth: 1,
     borderRadius: radiusSm,
     paddingHorizontal: 12,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   searchInput: {
     flex: 1,
     fontFamily: fonts.regular,
-    fontSize: 15,
+    fontSize: 16,
     color: colors.text,
-    paddingVertical: 12,
+    paddingVertical: 11,
   },
-  title: { marginTop: 2 },
-  legend: { flexDirection: 'row', gap: 16, marginTop: 10, marginBottom: 14 },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { fontFamily: fonts.regular, fontSize: 13, color: colors.muted },
-  list: { gap: 10 },
+  listHead: { marginBottom: 10, gap: 6 },
+  count: { fontFamily: fonts.semibold, fontSize: 14, color: colors.soft },
+  legend: { flexDirection: 'row', gap: 14 },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  swatch: { width: 10, height: 10, borderRadius: 2 },
+  legendText: { fontFamily: fonts.medium, fontSize: 13, color: colors.muted },
+  list: { gap: 8 },
   empty: { ...type.body, color: colors.muted, textAlign: 'center', paddingVertical: 24 },
 });

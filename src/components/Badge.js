@@ -7,13 +7,14 @@ const VARIANTS = {
   green: { bg: colors.greenSoft, fg: colors.green },
   blue: { bg: colors.blueSoft, fg: colors.blue },
   gray: { bg: colors.panel3, fg: colors.muted },
+  solidRed: { bg: colors.red, fg: '#FFFFFF' },
 };
 
-// Pílula de status/risco (raio 999, fundo "soft" + texto na cor cheia)
+// Etiqueta de status: retangular, caixa alta condensada (estilo etiqueta de oficina)
 export default function Badge({ variant = 'blue', label, style }) {
   const v = VARIANTS[variant] ?? VARIANTS.blue;
   return (
-    <View style={[styles.badge, { backgroundColor: v.bg, borderColor: v.fg + '55' }, style]}>
+    <View style={[styles.badge, { backgroundColor: v.bg }, style]}>
       <Text style={[styles.label, { color: v.fg }]}>{label}</Text>
     </View>
   );
@@ -22,10 +23,9 @@ export default function Badge({ variant = 'blue', label, style }) {
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    borderRadius: 3,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
   },
-  label: { fontFamily: fonts.bold, fontSize: 12 },
+  label: { fontFamily: fonts.condensedBold, fontSize: 13, letterSpacing: 0.3, textTransform: 'uppercase' },
 });

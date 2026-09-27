@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimation, Pressable, StyleSheet, Text, View } from 'react-native';
 import { usePredit } from '../state/PreditContext';
 import { colors, fonts, radius, type } from '../theme';
-import Badge from './Badge';
 import Button from './Button';
 
 // Estados do botão principal — Documentacao.md seção 7 (+ deferred, que o web não tratava)
@@ -69,8 +68,8 @@ export default function AiPlanCard({ customer, onGoToTracking }) {
   return (
     <View style={styles.card}>
       <View style={styles.head}>
-        <Badge variant="blue" label="ANÁLISE PREDIT AI" />
-        <Text style={styles.confidence}>{plan.confidence}% confiança</Text>
+        <Text style={type.h2}>Plano de ação</Text>
+        <Text style={styles.confidence}>Confiança do modelo: {plan.confidence}%</Text>
       </View>
 
       {!collapsed && (
@@ -78,50 +77,56 @@ export default function AiPlanCard({ customer, onGoToTracking }) {
           <Text style={styles.summary}>{plan.summary}</Text>
 
           <View style={styles.meta}>
-            <Meta label="Tom recomendado" value={plan.tone} />
+            <Meta label="Tom" value={plan.tone} />
             <Meta label="Canal" value={plan.channel} />
-            <Meta label="Melhor horário" value={plan.bestWindow} />
+            <Meta label="Horário" value={plan.bestWindow} last />
           </View>
 
           <View style={styles.steps}>
+            <Text style={styles.sectionLabel}>Passo a passo</Text>
             {plan.steps.map((step, i) => (
               <View key={i} style={styles.step}>
-                <Text style={styles.stepNum}>{i + 1}.</Text>
+                <Text style={styles.stepNum}>{i + 1}</Text>
                 <Text style={styles.stepText}>{step}</Text>
               </View>
             ))}
           </View>
 
-          <View style={styles.whatsapp}>
-            <Text style={[type.eyebrow, styles.whatsappLabel]}>Primeira mensagem do agente (WhatsApp)</Text>
-            <Text style={styles.whatsappText}>
-              {plan.whatsappMessage || 'Nenhuma abordagem ativa recomendada no momento.'}
-            </Text>
+          <View>
+            <Text style={styles.sectionLabel}>Primeira mensagem</Text>
+            {plan.whatsappMessage ? (
+              <View style={styles.bubble}>
+                <Text style={styles.bubbleText}>{plan.whatsappMessage}</Text>
+                <Text style={styles.bubbleMeta}>{plan.channel} · enviada pelo Predit</Text>
+              </View>
+            ) : (
+              <Text style={styles.stepText}>Nenhuma abordagem ativa recomendada no momento.</Text>
+            )}
           </View>
         </View>
       )}
 
       <Pressable onPress={toggle} hitSlop={8} style={styles.toggle}>
-        <Ionicons name={collapsed ? 'chevron-down' : 'chevron-up'} size={16} color={colors.muted} />
-        <Text style={styles.toggleText}>{collapsed ? 'Ver detalhes' : 'Ocultar detalhes'}</Text>
+        <Text style={styles.toggleText}>{collapsed ? 'Mostrar plano completo' : 'Recolher plano'}</Text>
+        <Ionicons name={collapsed ? 'chevron-down' : 'chevron-up'} size={16} color={colors.blue} />
       </Pressable>
 
       <Button
-        icon="flash"
+        icon={customer.approach.status === 'not_started' ? 'play' : 'arrow-forward'}
         label={btn.label}
         variant={btn.variant}
         disabled={btn.disabled}
         onPress={onMainPress}
       />
       <Text style={styles.note}>{btn.note}</Text>
-      <Text style={styles.timestamp}>Gerado por Predit AI em {plan.generatedAt}</Text>
+      <Text style={styles.timestamp}>Plano gerado em {plan.generatedAt}</Text>
     </View>
   );
 }
 
-function Meta({ label, value }) {
+function Meta({ label, value, last }) {
   return (
-    <View style={styles.metaItem}>
+    <View style={[styles.metaRow, last && styles.metaRowLast]}>
       <Text style={styles.metaLabel}>{label}</Text>
       <Text style={styles.metaValue}>{value}</Text>
     </View>
@@ -130,61 +135,62 @@ function Meta({ label, value }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.panel2,
+    backgroundColor: colors.panel,
     borderColor: colors.line,
-    borderTopColor: colors.blue,
-    borderTopWidth: 2,
     borderWidth: 1,
     borderRadius: radius,
     padding: 16,
     marginTop: 12,
   },
-  // flexWrap: em tela estreita (ou fonte do sistema grande) a confiança desce para a linha de baixo
-  head: {
+  head: { gap: 2 },
+  confidence: { fontFamily: fonts.medium, fontSize: 14, color: colors.muted },
+  body: { marginTop: 12, gap: 16 },
+  summary: { ...type.body, color: colors.text },
+  meta: { borderTopColor: colors.line, borderTopWidth: 1 },
+  metaRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    columnGap: 8,
-    rowGap: 6,
+    gap: 12,
+    paddingVertical: 9,
+    borderBottomColor: colors.line,
+    borderBottomWidth: 1,
   },
-  confidence: { fontFamily: fonts.bold, fontSize: 13, color: colors.green, flexShrink: 1 },
-  body: { marginTop: 14, gap: 14 },
-  summary: { ...type.body, color: colors.text, lineHeight: 21 },
-  meta: { gap: 8 },
-  metaItem: {
-    backgroundColor: colors.panel,
-    borderColor: colors.line,
-    borderWidth: 1,
-    borderRadius: 7,
-    padding: 10,
+  metaRowLast: { borderBottomWidth: 1 },
+  metaLabel: { width: 64, fontFamily: fonts.medium, fontSize: 14, color: colors.muted },
+  metaValue: { flex: 1, fontFamily: fonts.semibold, fontSize: 14, color: colors.text },
+  sectionLabel: { ...type.eyebrow, marginBottom: 8 },
+  steps: { gap: 8 },
+  step: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  stepNum: {
+    width: 22,
+    height: 22,
+    borderRadius: 3,
+    backgroundColor: colors.blue,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 22,
+    fontFamily: fonts.condensedBold,
+    fontSize: 14,
+    overflow: 'hidden',
   },
-  metaLabel: { fontFamily: fonts.regular, fontSize: 12, color: colors.muted },
-  metaValue: { fontFamily: fonts.semibold, fontSize: 14, color: colors.text, marginTop: 2 },
-  steps: { gap: 6 },
-  step: { flexDirection: 'row', gap: 6 },
-  stepNum: { fontFamily: fonts.semibold, fontSize: 14, color: colors.muted, width: 18 },
-  stepText: { flex: 1, fontFamily: fonts.regular, fontSize: 14, color: colors.soft, lineHeight: 20 },
-  whatsapp: {
-    backgroundColor: colors.greenSoft,
-    borderLeftColor: colors.green,
-    borderLeftWidth: 3,
-    borderRadius: 7,
+  stepText: { flex: 1, fontFamily: fonts.regular, fontSize: 15, color: colors.soft, lineHeight: 21 },
+  bubble: {
+    alignSelf: 'flex-end',
+    maxWidth: '92%',
+    backgroundColor: colors.bubbleOut,
+    borderRadius: 10,
+    borderBottomRightRadius: 2,
     padding: 12,
   },
-  whatsappLabel: { fontSize: 10, color: colors.dim, marginBottom: 6 },
-  whatsappText: { fontFamily: fonts.regular, fontSize: 14, color: colors.text, lineHeight: 21 },
+  bubbleText: { fontFamily: fonts.regular, fontSize: 15, color: colors.text, lineHeight: 21 },
+  bubbleMeta: { fontFamily: fonts.regular, fontSize: 12, color: colors.muted, marginTop: 6, textAlign: 'right' },
   toggle: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    borderTopColor: colors.line,
-    borderTopWidth: 1,
+    gap: 4,
     marginTop: 14,
-    paddingVertical: 12,
+    marginBottom: 12,
   },
-  toggleText: { fontFamily: fonts.semibold, fontSize: 13, color: colors.muted },
-  note: { fontFamily: fonts.regular, fontSize: 12, color: colors.muted, textAlign: 'center', marginTop: 8 },
-  timestamp: { fontFamily: fonts.regular, fontSize: 12, color: colors.dim, textAlign: 'center', marginTop: 8 },
+  toggleText: { fontFamily: fonts.semibold, fontSize: 14, color: colors.blue },
+  note: { fontFamily: fonts.regular, fontSize: 13, color: colors.muted, textAlign: 'center', marginTop: 8 },
+  timestamp: { fontFamily: fonts.regular, fontSize: 12, color: colors.dim, textAlign: 'center', marginTop: 4 },
 });

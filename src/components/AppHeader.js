@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radiusSm, type } from '../theme';
+import { colors, fonts, type } from '../theme';
 
-// Marca + eyebrow + título/subtítulo da tela (Documentacao.md seções 5.1 e 5.2)
-// `onReset`: botão "Reiniciar" (e long-press no logo) volta a demo ao estado inicial, com confirmação
+// Faixa azul Ford com a marca + título da tela (Documentacao.md 5.1 e 5.2)
+// `onReset`: botão "Reiniciar" (e long-press no logo) volta a demo ao estado inicial, com confirmação.
+// Deve ser o 1º filho do <Screen> — as margens negativas estendem a faixa até as bordas.
 export default function AppHeader({ title, subtitle, onReset }) {
   const confirmReset = () => {
     if (!onReset) return;
@@ -19,14 +20,14 @@ export default function AppHeader({ title, subtitle, onReset }) {
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.brand}>
-        <Pressable onLongPress={confirmReset} delayLongPress={800} style={styles.logoBox}>
+      <View style={styles.band}>
+        <Pressable onLongPress={confirmReset} delayLongPress={800} style={styles.brand}>
           <Image source={require('../../assets/splash-icon.png')} style={styles.logo} />
+          <View>
+            <Text style={styles.brandName}>Predit</Text>
+            <Text style={styles.brandSub}>Pós-venda · Rede Ford</Text>
+          </View>
         </Pressable>
-        <View style={styles.brandText}>
-          <Text style={styles.brandName}>Predit</Text>
-          <Text style={styles.brandSub}>VIN Share Intelligence</Text>
-        </View>
 
         {onReset && (
           <Pressable
@@ -36,48 +37,49 @@ export default function AppHeader({ title, subtitle, onReset }) {
             accessibilityLabel="Reiniciar experiência"
             style={({ pressed }) => [styles.reset, pressed && styles.resetPressed]}
           >
-            <Ionicons name="refresh" size={15} color={colors.soft} />
+            <Ionicons name="refresh" size={16} color={colors.onBrand} />
             <Text style={styles.resetText}>Reiniciar</Text>
           </Pressable>
         )}
       </View>
 
-      <Text style={type.eyebrow}>Dashboard Ford / Concessionária</Text>
       <Text style={[type.h1, styles.title]}>{title}</Text>
-      {subtitle ? <Text style={type.body}>{subtitle}</Text> : null}
+      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrap: { marginBottom: 16 },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 },
-  logoBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-    backgroundColor: colors.panel2,
-    borderWidth: 1,
-    borderColor: colors.lineStrong,
+  band: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.brand,
+    marginHorizontal: -16,
+    marginTop: -16,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 14,
+    borderBottomColor: colors.line,
+    borderBottomWidth: 1,
   },
-  logo: { width: 28, height: 28, resizeMode: 'contain' },
-  brandText: { flex: 1 },
-  brandName: { fontFamily: fonts.bold, fontSize: 16, color: colors.text },
-  brandSub: { fontFamily: fonts.regular, fontSize: 12, color: colors.muted },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  logo: { width: 30, height: 30, resizeMode: 'contain' },
+  brandName: { fontFamily: fonts.condensedBold, fontSize: 22, color: colors.onBrand, lineHeight: 24 },
+  brandSub: { fontFamily: fonts.medium, fontSize: 12, color: colors.onBrandMuted },
   reset: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: colors.panel3,
-    borderColor: colors.lineStrong,
+    borderColor: 'rgba(255,255,255,0.35)',
     borderWidth: 1,
-    borderRadius: radiusSm,
+    borderRadius: 4,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
-  resetPressed: { opacity: 0.7 },
-  resetText: { fontFamily: fonts.semibold, fontSize: 13, color: colors.soft },
-  title: { marginTop: 4, marginBottom: 4 },
+  resetPressed: { backgroundColor: 'rgba(255,255,255,0.12)' },
+  resetText: { fontFamily: fonts.semibold, fontSize: 13, color: colors.onBrand },
+  title: { marginTop: 18 },
+  subtitle: { ...type.body, color: colors.muted, marginTop: 2 },
 });

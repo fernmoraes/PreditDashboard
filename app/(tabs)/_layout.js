@@ -13,22 +13,26 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: colors.bg },
         tabBarStyle: { backgroundColor: colors.sidebar, borderTopColor: colors.line },
         tabBarActiveTintColor: colors.blue,
-        tabBarInactiveTintColor: colors.muted,
-        tabBarLabelStyle: { fontFamily: fonts.semibold, fontSize: 12 },
+        tabBarInactiveTintColor: colors.dim,
+        tabBarLabelStyle: { fontFamily: fonts.condensed, fontSize: 14 },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Clientes',
-          tabBarIcon: ({ color, size }) => <Ionicons name="people" size={size} color={color} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'people' : 'people-outline'} size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="acompanhamento"
         options={{
           title: 'Acompanhamento',
-          tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={size} color={color} />
+          ),
           // Badge vermelho só quando a IA pediu apoio humano (Documentacao.md 5.1)
           tabBarBadge: needsHuman > 0 ? needsHuman : undefined,
           tabBarBadgeStyle: { backgroundColor: colors.red, color: '#fff', fontFamily: fonts.bold },
