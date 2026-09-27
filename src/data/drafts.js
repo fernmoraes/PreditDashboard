@@ -47,6 +47,76 @@ export const followUpDrafts = {
     ],
   ],
 
+  // --- Clientes extras (extraCustomers.js) sem handoff ---
+
+  // Juliana Alves — Territory 2024, leva e traz, só pode de manhã cedo
+  '9BF-TER24-H77': [
+    [
+      'Juliana, fechado! O motorista busca sua Territory na terça às 7h e devolve no fim da tarde.',
+      'Só me confirma o endereço novo pra eu deixar tudo certo?',
+    ],
+    [
+      'Oi Juliana! Separei quinta às 7h com leva e traz. A revisão fica pronta no mesmo dia.',
+      'Posso confirmar esse horário pra você?',
+    ],
+  ],
+
+  // Thiago Mendes — Ranger 2023, 40 mil km, uso em terra
+  '9BF-RNG23-M79': [
+    [
+      'Thiago, consigo te encaixar amanhã às 7h na Ford Campinas, com checagem de freios e suspensão inclusa.',
+      'Faz agora e a garantia segue cobrindo tudo. Posso confirmar?',
+    ],
+    [
+      'Thiago, com o uso em terra, pastilhas e amortecedores costumam sentir primeiro.',
+      'Tenho horário sábado às 8h com a checagem completa. Quer reservar?',
+    ],
+  ],
+
+  // Pedro Santos — frota de 3 Transits
+  '9BF-TRN23-I71': [
+    [
+      'Pedro, montei a revisão das 3 Transits para segunda: entrada às 7h e entrega até as 18h, sem parar sua operação.',
+      'Posso confirmar as três no mesmo dia?',
+    ],
+    [
+      'Pedro, se preferir não tirar as 3 de circulação ao mesmo tempo, faço uma por dia: segunda, terça e quarta, sempre com entrega no fim do dia.',
+      'Qual formato funciona melhor pra você?',
+    ],
+  ],
+
+  // Gustavo Ribeiro — Maverick Híbrida, dúvidas sobre bateria
+  '9BF-MAV24-K61': [
+    [
+      'Gustavo, sobre sua dúvida: a bateria híbrida da Maverick tem garantia própria e o diagnóstico completo só é feito na rede Ford.',
+      'Tenho sábado às 9h pra revisão do sistema híbrido, com explicação de tudo. Reservo pra você?',
+    ],
+    [
+      'Oi Gustavo! Na revisão do sistema híbrido a gente verifica a saúde da bateria e te entrega um relatório.',
+      'Como você mora mais longe, sábado de manhã é o melhor. Pode ser dia 4 às 9h?',
+    ],
+  ],
+
+  // Fernanda Lopes — Bronco Sport, pacote pré-viagem já fechado
+  '9BF-BRS23-L56': [
+    [
+      'Oi Fernanda! Sua Bronco Sport já está pronta pra retirada hoje às 17h, com revisão e pneus novos.',
+      'Boa viagem! 🚙',
+    ],
+    [
+      'Fernanda, como foi a viagem? Espero que a Bronco Sport tenha ido bem na estrada!',
+      'Se puder, me conta de 0 a 10 como foi o atendimento.',
+    ],
+  ],
+
+  // Larissa Gomes — baixo risco (plano não acionável; mantido por completude)
+  '9BF-TER25-N35': [
+    [
+      'Oi Larissa! Obrigado por confiar na Ford Morumbi.',
+      'Sua Territory está com tudo em dia. Qualquer coisa, é só chamar por aqui!',
+    ],
+  ],
+
   // Diego Nunes — Territory 2025, 1ª revisão já agendada para sábado às 9h
   '9BF-TER25-F63': [
     [
