@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "com.predit.dashboard",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#0a0b0f",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -35,6 +36,12 @@
           "backgroundColor": "#0a0b0f"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "abda2d25-4ac3-4e08-bcfc-e610d8351c35"
+      }
+    }
   }
 }

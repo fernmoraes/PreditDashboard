@@ -9,8 +9,9 @@ import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import AnimatedSplash from '@/components/ui/AnimatedSplash';
 import Toast from '@/components/ui/Toast';
 import { PreditProvider, usePredit } from '@/context/PreditContext';
 import { colors, fonts } from '@/constants/theme';
@@ -41,7 +42,9 @@ function AppShell() {
     BarlowCondensed_700Bold,
   });
   const ready = (fontsLoaded || fontError) && state.ready;
+  const [introDone, setIntroDone] = useState(false);
 
+  // A splash nativa só sai quando a abertura animada (idêntica a ela no 1º quadro) já está na tela
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
@@ -50,7 +53,6 @@ function AppShell() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      {/* Texto claro: o topo de todas as telas é a faixa azul Ford */}
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -66,6 +68,7 @@ function AppShell() {
         <Stack.Screen name="cliente/[vin]" options={{ title: 'Cliente' }} />
       </Stack>
       <Toast />
+      {!introDone && <AnimatedSplash onFinish={() => setIntroDone(true)} />}
     </View>
   );
 }
