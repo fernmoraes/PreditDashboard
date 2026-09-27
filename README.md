@@ -32,26 +32,27 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 4. Na tela de **Acompanhamento**, o consultor vê todas as conversas. Quando o cliente faz uma pergunta fora do escopo da IA (ex.: dúvida jurídica sobre garantia), o caso aparece como **"ASSUMIR"**, com perfil do cliente, motivo, roteiro de resposta e um aviso do que **nunca dizer**.
 5. O consultor pode **gerar uma mensagem**, **editar**, **gerar outra opção** e **enviar**. A mensagem nunca sai sem um clique humano em "Enviar".
 
-> **MVP / dados simulados:** não há IA real, backend nem integração com WhatsApp. Os 6 clientes, os planos e as conversas são dados mockados, e o envio de mensagens é um **simulacro** (a mensagem é registrada no histórico como enviada pelo agente de IA).
+> **MVP / dados simulados:** não há IA real, backend nem integração com WhatsApp. Os 14 clientes (de 3 concessionárias e 9 modelos Ford), os planos e as conversas são dados mockados, e o envio de mensagens é um **simulacro** (a mensagem é registrada no histórico como enviada pelo agente de IA).
 
 ---
 
 ## Funcionalidades
 
 **Aba Clientes**
-- Fila de prioridade ordenada por score, com cores por nível de risco (Alto ≥ 75 · Médio ≥ 55 · Baixo < 55)
+- Fila de prioridade ordenada por score, com faixa de cor por nível de risco (Alto ≥ 75 · Médio ≥ 55 · Baixo < 55)
 - Busca por nome, VIN, modelo ou concessionária
-- Status da abordagem em cada cliente (Em andamento, ASSUMIR, Concluído, Repassado)
+- Status da abordagem em cada cliente (Assumir, Em andamento, Concluído, Repassado)
 
 **Tela do cliente**
-- Anel de score, motivos do risco e card **Análise Predit AI** (resumo, tom, canal, horário, passos e primeira mensagem)
+- Medidor de score, garantia, última revisão e motivos do risco
+- **Plano de ação** gerado pela IA: resumo, tom, canal, horário, passo a passo e primeira mensagem
 - Botão principal que muda conforme o estado do plano (Iniciar / Em andamento / Pedir apoio / Concluído / Repassado)
 
 **Aba Acompanhamento**
 - Filtros por status com contagem (Todos, Assumir, Em andamento, Repassados, Concluídos)
 - Cards recolhidos com prévia; toque para expandir
 - Gerar mensagem, editar, gerar outra opção e enviar (simulado), para todos os clientes
-- Histórico de conversa por cliente
+- Conversa com o cliente em formato de chat
 - Passar o caso adiante e **retomar** depois
 - Badge vermelho na aba quando algum caso precisa de apoio humano
 
@@ -70,7 +71,7 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 | Estado | React Context + `useReducer` |
 | Persistência | `@react-native-async-storage/async-storage` |
 | Gráfico do score | `react-native-svg` |
-| Fonte | Inter (`@expo-google-fonts/inter`) |
+| Fonte | Barlow e Barlow Condensed (`@expo-google-fonts/barlow`) |
 | Ícones | `@expo/vector-icons` (Ionicons) |
 
 ---
@@ -105,21 +106,30 @@ npx expo start
 
 ```
 PreditDashboard/
-├── app/                        # Rotas (Expo Router)
-│   ├── _layout.js              # Layout raiz: fontes, splash, tema, estado global, toast
+├── app/                          # Rotas (Expo Router — cada arquivo é uma tela)
+│   ├── _layout.js                # Layout raiz: fontes, splash, tema, estado global, toast
 │   ├── (tabs)/
-│   │   ├── _layout.js          # Abas: Clientes e Acompanhamento
-│   │   ├── index.js            # Aba Clientes (fila de prioridade)
-│   │   └── acompanhamento.js   # Aba Acompanhamento
-│   └── cliente/[vin].js        # Detalhe do cliente + plano de IA
+│   │   ├── _layout.js            # Barra de abas: Clientes e Acompanhamento
+│   │   ├── index.js              # Aba Clientes (fila de prioridade)
+│   │   └── acompanhamento.js     # Aba Acompanhamento
+│   └── cliente/[vin].js          # Detalhe do cliente + plano de ação
 ├── src/
-│   ├── components/             # Componentes de UI (cards, botões, anel de score…)
-│   ├── data/                   # Dados mockados (clientes e rascunhos de mensagem)
-│   ├── state/PreditContext.js  # Estado global, ações e persistência
-│   ├── utils/                  # Regras de risco e hora
-│   └── theme.js                # Cores, fontes e tokens de design
-├── assets/                     # Logo, ícones e splash
+│   ├── components/
+│   │   ├── ui/                   # Componentes genéricos: Button, Badge, Panel, Screen, Toast, AppHeader
+│   │   ├── clients/              # Lista e detalhe do cliente: CustomerRow, ScoreRing, AiPlanCard
+│   │   └── tracking/             # Acompanhamento: TrackCard, ChatHistory
+│   ├── constants/
+│   │   ├── theme.js              # Cores, fontes e tokens de design
+│   │   └── status.js             # Rótulos, cores e ordem dos status da abordagem
+│   ├── context/PreditContext.js  # Estado global, ações e persistência (AsyncStorage)
+│   ├── data/                     # Dados mockados: clientes e rascunhos de mensagem
+│   └── utils/                    # Regras de risco e formatação de hora
+├── assets/images/                # Logo, ícone do app e splash
+├── app.json                      # Configuração do Expo (nome, ícone, splash, pacote Android)
+└── jsconfig.json                 # Alias de importação @/ → src/
 ```
+
+Os imports usam o alias `@/` para a pasta `src/` (ex.: `import Button from '@/components/ui/Button'`), em vez de caminhos relativos como `../../src/components/...`.
 
 ---
 
