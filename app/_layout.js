@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import AnimatedSplash from '@/components/ui/AnimatedSplash';
 import Toast from '@/components/ui/Toast';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { PreditProvider, usePredit } from '@/context/PreditContext';
 import { colors, fonts } from '@/constants/theme';
 
@@ -33,6 +34,7 @@ const navTheme = {
 
 function AppShell() {
   const { state } = usePredit();
+  const auth = useAuth();
   const [fontsLoaded, fontError] = useFonts({
     Barlow_400Regular,
     Barlow_500Medium,
@@ -41,7 +43,8 @@ function AppShell() {
     BarlowCondensed_600SemiBold,
     BarlowCondensed_700Bold,
   });
-  const ready = (fontsLoaded || fontError) && state.ready;
+  const ready = (fontsLoaded || fontError) && state.ready && auth.ready;
+  const loggedIn = !!auth.session;
   const [introDone, setIntroDone] = useState(false);
 
   // A splash nativa só sai quando a abertura animada (idêntica a ela no 1º quadro) já está na tela
@@ -64,8 +67,15 @@ function AppShell() {
           headerBackButtonDisplayMode: 'minimal',
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="cliente/[vin]" options={{ title: 'Cliente' }} />
+        {/* Sem sessão só login/cadastro existem; com sessão, só o app. O router redireciona sozinho. */}
+        <Stack.Protected guard={loggedIn}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="cliente/[vin]" options={{ title: 'Cliente' }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!loggedIn}>
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="cadastro" options={{ title: 'Criar conta' }} />
+        </Stack.Protected>
       </Stack>
       <Toast />
       {!introDone && <AnimatedSplash onFinish={() => setIntroDone(true)} />}
@@ -76,9 +86,11 @@ function AppShell() {
 export default function RootLayout() {
   return (
     <ThemeProvider value={navTheme}>
-      <PreditProvider>
-        <AppShell />
-      </PreditProvider>
+      <AuthProvider>
+        <PreditProvider>
+          <AppShell />
+        </PreditProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

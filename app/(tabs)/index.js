@@ -24,7 +24,6 @@ export default function ClientesScreen() {
       <AppHeader
         title="Clientes em risco"
         subtitle="Quem tem mais chance de sair da rede, e o que fazer a seguir."
-        onReset={actions.resetDemo}
       />
 
       <View style={styles.search}>

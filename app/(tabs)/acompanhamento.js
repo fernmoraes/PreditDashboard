@@ -82,7 +82,6 @@ export default function AcompanhamentoScreen() {
         <AppHeader
           title="Acompanhamento"
           subtitle="Conversas em curso e os casos em que o Predit precisa de você."
-          onReset={actions.resetDemo}
         />
 
         {/* Filtros como abas sublinhadas (rolam na horizontal em telas estreitas) */}

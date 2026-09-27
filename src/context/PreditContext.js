@@ -214,7 +214,7 @@ export function PreditProvider({ children }) {
       resetDemo: async () => {
         await AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
         dispatch({ type: 'reset' });
-        showToast('Experiência reiniciada: clientes voltaram ao estado inicial.');
+        showToast('Experiência reiniciada: contas, login salvo e dados apagados.');
       },
     };
   }, [find, state.trackingUi]);
