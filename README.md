@@ -38,6 +38,13 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 
 ## Funcionalidades
 
+**Login e cadastro**
+- Abertura animada com a marca Predit, seguida da tela de login
+- Login com e-mail corporativo completo (precisa terminar em `@ford.com`) e senha
+- Opção **"Lembrar e-mail e senha"**: na próxima abertura o login já vem preenchido, é só tocar em Entrar
+- Cadastro com nome, e-mail `@ford.com`, senha (mín. 6 caracteres) e concessionária, escolhida numa lista de concessionárias Ford da Grande São Paulo. Depois do cadastro a pessoa volta ao login com o e-mail preenchido
+- Saudação **"Bem-vindo, {nome}"** com a concessionária nas telas iniciais, e botão **Sair**
+
 **Aba Clientes**
 - Fila de prioridade ordenada por score, com faixa de cor por nível de risco (Alto ≥ 75 · Médio ≥ 55 · Baixo < 55)
 - Busca por nome, VIN, modelo ou concessionária
@@ -58,7 +65,9 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 
 **Geral**
 - Estado salvo no aparelho (AsyncStorage): o progresso continua ao fechar e abrir o app
-- Botão **Reiniciar** no cabeçalho para voltar ao cenário inicial da demonstração
+- Botão **Reiniciar** no cabeçalho: volta ao cenário inicial da demonstração e apaga todas as contas cadastradas e o login salvo
+
+> **Sobre o login:** é local, sem servidor (MVP). As senhas das contas são guardadas apenas como hash SHA-256 com salt, e o "lembrar senha" usa o armazenamento seguro do aparelho (`expo-secure-store`).
 
 ---
 
@@ -70,6 +79,7 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 | Navegação | Expo Router (abas + pilha) |
 | Estado | React Context + `useReducer` |
 | Persistência | `@react-native-async-storage/async-storage` |
+| Login | `expo-secure-store` (credenciais lembradas) + `expo-crypto` (hash de senha) |
 | Gráfico do score | `react-native-svg` |
 | Fonte | Barlow e Barlow Condensed (`@expo-google-fonts/barlow`) |
 | Ícones | `@expo/vector-icons` (Ionicons) |
@@ -94,11 +104,13 @@ npx expo start
 
 ### Roteiro sugerido de demonstração
 
-1. **Clientes** → abra **Rafael Lima** → toque em **Iniciar Plano de Ação**.
-2. **Acompanhamento** → abra **Marina Costa** (ASSUMIR) → leia o roteiro → **Gerar mensagem** → **Gerar outra** → **Editar** → **Enviar**.
-3. Veja o caso da Marina passar para "Em andamento" e o badge vermelho sumir.
-4. Em qualquer caso, teste **Passar adiante** e depois **Retomar caso**.
-5. Toque em **Reiniciar** no cabeçalho para voltar ao início.
+1. Na tela de login, toque em **Criar conta** → preencha nome, e-mail, senha e concessionária.
+2. **Clientes** → abra **Rafael Lima** → toque em **Iniciar Plano de Ação**.
+3. **Acompanhamento** → abra **Marina Costa** (ASSUMIR) → leia o roteiro → **Gerar mensagem** → **Gerar outra** → **Editar** → **Enviar**.
+4. Veja o caso da Marina passar para "Em andamento" e o badge vermelho sumir.
+5. Em qualquer caso, teste **Passar adiante** e depois **Retomar caso**.
+6. Toque em **Sair**, marque **Lembrar e-mail e senha** ao entrar de novo, e reabra o app para ver o login preenchido.
+7. Toque em **Reiniciar** no cabeçalho para apagar tudo e voltar ao início.
 
 ---
 
@@ -107,7 +119,9 @@ npx expo start
 ```
 PreditDashboard/
 ├── app/                          # Rotas (Expo Router — cada arquivo é uma tela)
-│   ├── _layout.js                # Layout raiz: fontes, splash, tema, estado global, toast
+│   ├── _layout.js                # Layout raiz: fontes, abertura, tema, estados globais, rotas protegidas por login
+│   ├── login.js                  # Tela de login
+│   ├── cadastro.js               # Tela de cadastro
 │   ├── (tabs)/
 │   │   ├── _layout.js            # Barra de abas: Clientes e Acompanhamento
 │   │   ├── index.js              # Aba Clientes (fila de prioridade)
@@ -115,13 +129,18 @@ PreditDashboard/
 │   └── cliente/[vin].js          # Detalhe do cliente + plano de ação
 ├── src/
 │   ├── components/
-│   │   ├── ui/                   # Componentes genéricos: Button, Badge, Panel, Screen, Toast, AppHeader
+│   │   ├── ui/                   # Genéricos: Button, Badge, Panel, Screen, TextField, ConfirmDialog, Toast, AppHeader, AnimatedSplash
+│   │   ├── auth/                 # Login/cadastro: AuthScreen, DealerPicker
 │   │   ├── clients/              # Lista e detalhe do cliente: CustomerRow, ScoreRing, AiPlanCard
 │   │   └── tracking/             # Acompanhamento: TrackCard, ChatHistory
 │   ├── constants/
 │   │   ├── theme.js              # Cores, fontes e tokens de design
-│   │   └── status.js             # Rótulos, cores e ordem dos status da abordagem
-│   ├── context/PreditContext.js  # Estado global, ações e persistência (AsyncStorage)
+│   │   ├── status.js             # Rótulos, cores e ordem dos status da abordagem
+│   │   └── dealers.js            # Concessionárias Ford disponíveis no cadastro
+│   ├── context/
+│   │   ├── AuthContext.js        # Contas, login, "lembrar senha" e sessão
+│   │   └── PreditContext.js      # Clientes, abordagens, ações e persistência (AsyncStorage)
+│   ├── hooks/useResetExperience.js # "Reiniciar": apaga clientes, contas e login salvo
 │   ├── data/                     # Dados mockados: clientes e rascunhos de mensagem
 │   └── utils/                    # Regras de risco e formatação de hora
 ├── assets/images/                # Logo, ícone do app e splash
