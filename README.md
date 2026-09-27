@@ -36,6 +36,76 @@ Depois que o carro sai da garantia (ou até antes), parte dos clientes deixa de 
 
 ---
 
+## Telas do app
+
+### 1. Login e cadastro
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/01-login.jpeg" width="260" alt="Tela de login"></td>
+    <td align="center"><img src="docs/screenshots/02-cadastro.jpeg" width="260" alt="Tela de cadastro"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Login</b></td>
+    <td align="center"><b>Cadastro</b></td>
+  </tr>
+</table>
+
+- **Login:** depois da abertura animada, o consultor entra com o e-mail corporativo (precisa terminar em `@ford.com`) e a senha. O olho mostra/oculta a senha e a opção **"Lembrar e-mail e senha neste aparelho"** faz o login vir preenchido na próxima abertura.
+- **Cadastro:** nome completo, e-mail `@ford.com`, senha (mínimo 6 caracteres) e concessionária, escolhida numa lista de concessionárias Ford da Grande São Paulo. Ao criar a conta, o app volta para o login com o e-mail já preenchido.
+
+### 2. Clientes em risco
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/03-clientes.jpeg" width="260" alt="Aba Clientes"></td>
+    <td align="center"><img src="docs/screenshots/04-clientes-lista.jpeg" width="260" alt="Aba Clientes, final da lista"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Topo da fila de prioridade</b></td>
+    <td align="center"><b>Restante da lista</b></td>
+  </tr>
+</table>
+
+Tela inicial após o login. No topo ficam a saudação **"Bem-vindo, {nome}"** com a concessionária do consultor, e os botões **Reiniciar** (volta a demonstração ao início e apaga as contas) e **Sair**. Abaixo, a busca e a **fila de prioridade**: os clientes ordenados do maior para o menor score de risco. Cada card tem uma faixa lateral na cor do risco (vermelho = alto, amarelo = médio, verde = baixo), o carro, a concessionária, a próxima ação recomendada e a etiqueta do status da abordagem (**Assumir**, **Em andamento**, **Concluído**). O número na aba **Acompanhamento** indica quantos casos precisam de um consultor.
+
+### 3. Detalhe do cliente e plano de ação
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/05-cliente-detalhe.jpeg" width="260" alt="Detalhe do cliente"></td>
+    <td align="center"><img src="docs/screenshots/06-cliente-plano-de-acao.jpeg" width="260" alt="Plano de ação do cliente"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Resumo do cliente</b></td>
+    <td align="center"><b>Plano de ação da IA</b></td>
+  </tr>
+</table>
+
+- **Resumo do cliente:** carro, concessionária, VIN, medidor do score, situação da garantia, última revisão e os motivos que explicam o risco de evasão.
+- **Plano de ação:** o que a IA recomenda para abordar o cliente: resumo da situação, tom, canal, melhor horário, passo a passo e a primeira mensagem que o agente envia. O botão principal muda conforme o estado: **Iniciar Plano de Ação** para quem ainda não foi abordado, ou atalhos para o acompanhamento (no exemplo, a IA já pediu apoio humano).
+
+### 4. Acompanhamento das abordagens
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/07-acompanhamento.jpeg" width="240" alt="Aba Acompanhamento"></td>
+    <td align="center"><img src="docs/screenshots/08-acompanhamento-caso-assumir.jpeg" width="240" alt="Caso que precisa de apoio humano"></td>
+    <td align="center"><img src="docs/screenshots/09-acompanhamento-rascunho-conversa.jpeg" width="240" alt="Rascunho de mensagem e conversa"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Lista de conversas</b></td>
+    <td align="center"><b>Caso "Assumir"</b></td>
+    <td align="center"><b>Rascunho e conversa</b></td>
+  </tr>
+</table>
+
+- **Lista de conversas:** todas as abordagens que a IA está conduzindo, com filtros por status e contagem. Os casos que precisam de um consultor (**Assumir**) aparecem primeiro. Cada card mostra uma prévia e abre com um toque.
+- **Caso "Assumir":** quando o cliente faz algo fora do escopo da IA (no exemplo, pedir para cobrir o preço de uma oficina concorrente), o card mostra o motivo, o perfil do cliente, um roteiro de **como responder** e o que **não dizer**.
+- **Rascunho e conversa:** **Gerar mensagem** cria uma resposta pronta, que o consultor pode **editar** ou trocar por outra opção (**Gerar outra**). Nada sai sem tocar em **Enviar**. Abaixo aparece a conversa com o cliente em formato de chat: o cliente à esquerda, o Predit à direita.
+
+---
+
 ## Funcionalidades
 
 **Login e cadastro**
@@ -144,6 +214,7 @@ PreditDashboard/
 │   ├── data/                     # Dados mockados: clientes e rascunhos de mensagem
 │   └── utils/                    # Regras de risco e formatação de hora
 ├── assets/images/                # Logo, ícone do app e splash
+├── docs/screenshots/             # Capturas de tela usadas neste README
 ├── app.json                      # Configuração do Expo (nome, ícone, splash, pacote Android)
 └── jsconfig.json                 # Alias de importação @/ → src/
 ```
