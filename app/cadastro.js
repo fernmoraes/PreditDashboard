@@ -6,7 +6,6 @@ import AuthScreen from '@/components/auth/AuthScreen';
 import DealerPicker from '@/components/auth/DealerPicker';
 import Button from '@/components/ui/Button';
 import TextField from '@/components/ui/TextField';
-import { DEALERS } from '@/constants/dealers';
 import { colors, fonts } from '@/constants/theme';
 import { MIN_PASSWORD, useAuth } from '@/context/AuthContext';
 import { usePredit } from '@/context/PreditContext';
@@ -37,9 +36,9 @@ export default function CadastroScreen() {
       return;
     }
     const firstName = name.trim().split(' ')[0];
-    const dealerName = DEALERS.find((d) => d.id === dealer)?.name;
-    actions.showToast(`Conta criada. Bem-vindo, ${firstName}! (${dealerName})`);
-    // sucesso: já está logado — o Stack.Protected leva para as abas
+    actions.showToast(`Conta criada, ${firstName}! Agora entre com seu e-mail e senha.`);
+    // volta para o login (sem empilhar outro) já com o e-mail preenchido
+    router.dismissTo({ pathname: '/login', params: { email: result.email } });
   };
 
   return (

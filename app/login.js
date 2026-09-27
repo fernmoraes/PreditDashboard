@@ -1,7 +1,7 @@
 // Tela de login — e-mail @ford.com + senha, com opção de lembrar as credenciais neste aparelho
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AuthScreen from '@/components/auth/AuthScreen';
 import Button from '@/components/ui/Button';
@@ -20,6 +20,17 @@ export default function LoginScreen() {
   const [remember, setRemember] = useState(!!remembered);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Vindo do cadastro (?email=): preenche o e-mail novo e leva o foco para a senha
+  const { email: newEmail } = useLocalSearchParams();
+  useEffect(() => {
+    if (!newEmail) return;
+    setUsername(newEmail);
+    setPassword('');
+    setError(null);
+    const t = setTimeout(() => passwordRef.current?.focus(), 350);
+    return () => clearTimeout(t);
+  }, [newEmail]);
 
   const submit = async () => {
     if (!username.trim() || !password) {

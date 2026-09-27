@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
     await AsyncStorage.setItem(ACCOUNTS_KEY, JSON.stringify(next));
   }, []);
 
-  /** Retorna { ok: true } ou { error: 'mensagem' }. Já entra no app após cadastrar. */
+  /** Retorna { ok: true, email } ou { error: 'mensagem', field }. Não inicia sessão. */
   const register = useCallback(
     async ({ username, password, name, dealer }) => {
       const { email, error } = toFordEmail(username);
@@ -80,8 +80,8 @@ export function AuthProvider({ children }) {
         createdAt: new Date().toISOString(),
       };
       await saveAccounts([...accounts, account]);
-      setSession({ email, name: account.name, dealer });
-      return { ok: true };
+      // não entra direto: a pessoa volta ao login e entra com a senha que acabou de criar
+      return { ok: true, email };
     },
     [accounts, saveAccounts],
   );

@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { DEALERS } from '@/constants/dealers';
 import { colors, fonts, type } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
 import { useResetExperience } from '@/hooks/useResetExperience';
+import ConfirmDialog from './ConfirmDialog';
 
 // Faixa do topo com a marca, saudação ao usuário logado e título da tela (Documentacao.md 5.1 e 5.2).
 // "Reiniciar" (e long-press no logo) apaga tudo — clientes, contas e login lembrado — com confirmação.
@@ -15,23 +17,10 @@ export default function AppHeader({ title, subtitle }) {
   const firstName = session?.name.split(' ')[0];
   const dealerName = DEALERS.find((d) => d.id === session?.dealer)?.name;
 
-  const confirmReset = () => {
-    Alert.alert(
-      'Reiniciar experiência?',
-      'Os clientes voltam ao estado inicial e todas as contas cadastradas e o login salvo são apagados. Você volta para a tela de login.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Reiniciar', style: 'destructive', onPress: resetExperience },
-      ],
-    );
-  };
-
-  const confirmLogout = () => {
-    Alert.alert('Sair da conta?', 'Você volta para a tela de login.', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', onPress: logout },
-    ]);
-  };
+  const [dialog, setDialog] = useState(null); // 'reset' | 'logout' | null
+  const confirmReset = () => setDialog('reset');
+  const confirmLogout = () => setDialog('logout');
+  const closeDialog = () => setDialog(null);
 
   return (
     <View style={styles.wrap}>
@@ -83,6 +72,32 @@ export default function AppHeader({ title, subtitle }) {
 
       <Text style={[type.h1, styles.title]}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+
+      <ConfirmDialog
+        visible={dialog === 'reset'}
+        destructive
+        icon="refresh"
+        title="Reiniciar experiência?"
+        message="Os clientes voltam ao estado inicial e todas as contas cadastradas e o login salvo são apagados. Você volta para a tela de login."
+        confirmLabel="Reiniciar"
+        onCancel={closeDialog}
+        onConfirm={() => {
+          closeDialog();
+          resetExperience();
+        }}
+      />
+      <ConfirmDialog
+        visible={dialog === 'logout'}
+        icon="log-out-outline"
+        title="Sair da conta?"
+        message="Você volta para a tela de login."
+        confirmLabel="Sair"
+        onCancel={closeDialog}
+        onConfirm={() => {
+          closeDialog();
+          logout();
+        }}
+      />
     </View>
   );
 }
