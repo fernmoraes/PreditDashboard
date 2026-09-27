@@ -1,15 +1,15 @@
 // Tela do cliente — painel "Caso selecionado" (Documentacao.md 6.1 e 7)
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
-import AiPlanCard from '../../src/components/AiPlanCard';
-import Badge from '../../src/components/Badge';
-import { APPROACH_BADGE } from '../../src/components/CustomerRow';
-import Panel from '../../src/components/Panel';
-import ScoreRing from '../../src/components/ScoreRing';
-import Screen from '../../src/components/Screen';
-import { useCustomer } from '../../src/state/PreditContext';
-import { colors, fonts, type } from '../../src/theme';
-import { riskColor, riskLevel } from '../../src/utils/risk';
+import AiPlanCard from '@/components/clients/AiPlanCard';
+import Badge from '@/components/ui/Badge';
+import { APPROACH_BADGE } from '@/constants/status';
+import Panel from '@/components/ui/Panel';
+import ScoreRing from '@/components/clients/ScoreRing';
+import Screen from '@/components/ui/Screen';
+import { useCustomer } from '@/context/PreditContext';
+import { colors, fonts, type } from '@/constants/theme';
+import { riskColor, riskLevel } from '@/utils/risk';
 
 export default function ClienteScreen() {
   const router = useRouter();

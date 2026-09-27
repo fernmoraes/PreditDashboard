@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, type } from '../theme';
+import { colors, fonts, type } from '@/constants/theme';
 
 // Faixa azul Ford com a marca + título da tela (Documentacao.md 5.1 e 5.2)
 // `onReset`: botão "Reiniciar" (e long-press no logo) volta a demo ao estado inicial, com confirmação.
@@ -22,7 +22,7 @@ export default function AppHeader({ title, subtitle, onReset }) {
     <View style={styles.wrap}>
       <View style={styles.band}>
         <Pressable onLongPress={confirmReset} delayLongPress={800} style={styles.brand}>
-          <Image source={require('../../assets/splash-icon.png')} style={styles.logo} />
+          <Image source={require('@assets/images/splash-icon.png')} style={styles.logo} />
           <View>
             <Text style={styles.brandName}>Predit</Text>
             <Text style={styles.brandSub}>Pós-venda · Rede Ford</Text>

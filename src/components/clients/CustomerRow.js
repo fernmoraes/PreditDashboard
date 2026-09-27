@@ -1,16 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radius } from '../theme';
-import { riskColor, riskLabel, riskLevel } from '../utils/risk';
-import Badge from './Badge';
-
-// Status da abordagem mostrado na linha/card (not_started não mostra nada)
-export const APPROACH_BADGE = {
-  in_progress: { variant: 'blue', label: 'Em andamento' },
-  needs_human: { variant: 'solidRed', label: 'Assumir' },
-  deferred: { variant: 'gray', label: 'Repassado' },
-  done: { variant: 'green', label: 'Concluído' },
-};
+import { colors, fonts, radius } from '@/constants/theme';
+import { riskColor, riskLabel, riskLevel } from '@/utils/risk';
+import Badge from '@/components/ui/Badge';
+import { APPROACH_BADGE } from '@/constants/status';
 
 // Linha da "Fila de prioridade" (Documentacao.md 6.1): faixa lateral na cor do risco + score em destaque
 export default function CustomerRow({ customer, onPress }) {

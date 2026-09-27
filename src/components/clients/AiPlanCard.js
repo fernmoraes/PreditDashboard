@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimation, Pressable, StyleSheet, Text, View } from 'react-native';
-import { usePredit } from '../state/PreditContext';
-import { colors, fonts, radius, type } from '../theme';
-import Button from './Button';
+import { usePredit } from '@/context/PreditContext';
+import { colors, fonts, radius, type } from '@/constants/theme';
+import Button from '@/components/ui/Button';
 
 // Estados do botão principal — Documentacao.md seção 7 (+ deferred, que o web não tratava)
 function planButton(customer) {

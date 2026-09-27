@@ -2,8 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePredit } from '../state/PreditContext';
-import { colors, fonts, radius, shadow } from '../theme';
+import { usePredit } from '@/context/PreditContext';
+import { colors, fonts, radius, shadow } from '@/constants/theme';
 
 const DURATION = 2200; // igual ao showToast() do web
 

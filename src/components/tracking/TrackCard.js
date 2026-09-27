@@ -1,25 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LayoutAnimation, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { getDrafts } from '../data/drafts';
-import { usePredit } from '../state/PreditContext';
-import { colors, fonts, radius, radiusSm, type } from '../theme';
-import Badge from './Badge';
-import Button from './Button';
-import ChatHistory, { chatBubbleLabel } from './ChatHistory';
-import { APPROACH_BADGE } from './CustomerRow';
+import { getDrafts } from '@/data/drafts';
+import { usePredit } from '@/context/PreditContext';
+import { colors, fonts, radius, radiusSm, type } from '@/constants/theme';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
+import ChatHistory, { chatBubbleLabel } from '@/components/tracking/ChatHistory';
+import { APPROACH_BADGE, STATUS_COLOR } from '@/constants/status';
 
 // Card de acompanhamento (Documentacao.md 6.4). Diferente do web:
 // - todo status ativo tem o compositor (Gerar mensagem / Editar / Gerar outra / Enviar), não só needs_human;
 // - "Enviar" é simulado: a mensagem entra no histórico como enviada pelo Predit (sem WhatsApp);
 // - caso repassado (deferred) pode ser retomado;
 // - card começa recolhido (cabeçalho + prévia) para a lista ser fácil de percorrer; toque expande.
-
-const STATUS_COLOR = {
-  needs_human: colors.red,
-  in_progress: colors.blue,
-  deferred: colors.dim,
-  done: colors.green,
-};
 
 // Uma linha que resume o caso quando o card está recolhido
 function previewText(customer) {

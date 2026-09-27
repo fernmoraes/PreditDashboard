@@ -11,9 +11,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import Toast from '../src/components/Toast';
-import { PreditProvider, usePredit } from '../src/state/PreditContext';
-import { colors, fonts } from '../src/theme';
+import Toast from '@/components/ui/Toast';
+import { PreditProvider, usePredit } from '@/context/PreditContext';
+import { colors, fonts } from '@/constants/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

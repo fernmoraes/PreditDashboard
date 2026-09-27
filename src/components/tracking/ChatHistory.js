@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '@/constants/theme';
 
 export function chatBubbleLabel(entry, customer) {
   if (entry.from === 'ai') return 'Predit';

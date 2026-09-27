@@ -2,11 +2,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import AppHeader from '../../src/components/AppHeader';
-import CustomerRow from '../../src/components/CustomerRow';
-import Screen from '../../src/components/Screen';
-import { useCustomers, usePredit } from '../../src/state/PreditContext';
-import { colors, fonts, radiusSm, type } from '../../src/theme';
+import AppHeader from '@/components/ui/AppHeader';
+import CustomerRow from '@/components/clients/CustomerRow';
+import Screen from '@/components/ui/Screen';
+import { useCustomers, usePredit } from '@/context/PreditContext';
+import { colors, fonts, radiusSm, type } from '@/constants/theme';
 
 const LEGEND = [
   { label: 'Alto ≥75', color: colors.red },

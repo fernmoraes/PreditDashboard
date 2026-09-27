@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { colors, radius } from '../theme';
+import { colors, radius } from '@/constants/theme';
 
 // Card padrão (branco com borda). `level={2}` usa o cinza claro (blocos internos).
 export default function Panel({ level = 1, style, children }) {

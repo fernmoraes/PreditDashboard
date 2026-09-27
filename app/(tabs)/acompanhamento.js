@@ -3,13 +3,12 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import AppHeader from '../../src/components/AppHeader';
-import Screen from '../../src/components/Screen';
-import TrackCard from '../../src/components/TrackCard';
-import { usePredit } from '../../src/state/PreditContext';
-import { colors, fonts, type } from '../../src/theme';
-
-const ORDER = { needs_human: 0, in_progress: 1, deferred: 2, done: 3 };
+import AppHeader from '@/components/ui/AppHeader';
+import Screen from '@/components/ui/Screen';
+import TrackCard from '@/components/tracking/TrackCard';
+import { STATUS_ORDER } from '@/constants/status';
+import { usePredit } from '@/context/PreditContext';
+import { colors, fonts, type } from '@/constants/theme';
 
 const FILTERS = [
   { key: 'all', label: 'Todos', color: colors.blue },
@@ -38,7 +37,7 @@ export default function AcompanhamentoScreen() {
     () =>
       state.customers
         .filter((c) => c.approach.status !== 'not_started')
-        .sort((a, b) => ORDER[a.approach.status] - ORDER[b.approach.status] || b.score - a.score),
+        .sort((a, b) => STATUS_ORDER[a.approach.status] - STATUS_ORDER[b.approach.status] || b.score - a.score),
     [state.customers],
   );
 

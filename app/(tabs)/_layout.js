@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router/js-tabs';
-import { useNeedsHumanCount } from '../../src/state/PreditContext';
-import { colors, fonts } from '../../src/theme';
+import { useNeedsHumanCount } from '@/context/PreditContext';
+import { colors, fonts } from '@/constants/theme';
 
 export default function TabsLayout() {
   const needsHuman = useNeedsHumanCount();

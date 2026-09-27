@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, radiusSm } from '../theme';
+import { colors, fonts, radiusSm } from '@/constants/theme';
 
 // Variantes — Documentacao.md seções 6.4 e 7
 const VARIANTS = {

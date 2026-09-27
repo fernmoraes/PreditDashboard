@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../theme';
+import { colors } from '@/constants/theme';
 
 // Container padrão das telas. A área da status bar fica azul Ford (continua a faixa do AppHeader);
 // o conteúdo rola sobre o fundo claro.

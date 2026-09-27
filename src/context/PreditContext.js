@@ -3,10 +3,10 @@
 // O envio é um SIMULACRO: nada sai do app — a mensagem aprovada entra no histórico como enviada pelo Agente IA.
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react';
-import { initialCustomers as webCustomers } from '../data/customers';
-import { getDrafts } from '../data/drafts';
-import { extraCustomers } from '../data/extraCustomers';
-import { nowTimeLabel } from '../utils/time';
+import { initialCustomers as webCustomers } from '@/data/customers';
+import { getDrafts } from '@/data/drafts';
+import { extraCustomers } from '@/data/extraCustomers';
+import { nowTimeLabel } from '@/utils/time';
 
 // 6 clientes do web + clientes extras criados para o mobile
 const initialCustomers = [...webCustomers, ...extraCustomers];

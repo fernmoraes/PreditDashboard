@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '@/constants/theme';
 
 const VARIANTS = {
   red: { bg: colors.redSoft, fg: colors.red },

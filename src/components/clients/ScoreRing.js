@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { colors, fonts } from '../theme';
-import { riskColor, riskLabel, riskLevel } from '../utils/risk';
+import { colors, fonts } from '@/constants/theme';
+import { riskColor, riskLabel, riskLevel } from '@/utils/risk';
 
 // Medidor de score (substitui o conic-gradient do web — Documentacao.md 6.1 / 14)
 export default function ScoreRing({ score, size = 112, stroke = 10 }) {

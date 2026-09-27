@@ -1,4 +1,4 @@
-import { colors } from '../theme';
+import { colors } from '@/constants/theme';
 
 // Limiares — Documentacao.md seção 9.1: Alto ≥ 75 · Médio ≥ 55 · Baixo < 55
 export function riskLevel(score) {
