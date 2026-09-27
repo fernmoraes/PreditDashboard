@@ -301,7 +301,7 @@ export const extraCustomers = [
   {
     name: "Gustavo Ribeiro",
     vin: "9BF-MAV24-K61",
-    model: "Maverick Híbrida 2024",
+    model: "Maverick Hybrid 2024",
     dealer: "Ford Campinas",
     score: 61,
     leadStatus: "Aguardando",
@@ -332,7 +332,7 @@ export const extraCustomers = [
         "Sugerir sábado pela manhã, por causa da distância",
       ],
       whatsappMessage:
-        "Oi Gustavo! Aqui é o assistente Predit da Ford Campinas. Vi que você tem algumas dúvidas sobre a bateria da sua Maverick Híbrida. Na revisão do sistema híbrido a gente faz o diagnóstico completo e te explica tudo. Quer agendar para um sábado?",
+        "Oi Gustavo! Aqui é o assistente Predit da Ford Campinas. Vi que você tem algumas dúvidas sobre a bateria da sua Maverick Hybrid. Na revisão do sistema híbrido a gente faz o diagnóstico completo e te explica tudo. Quer agendar para um sábado?",
     },
     approach: { status: "not_started", log: [] },
   },

@@ -85,7 +85,7 @@ export const followUpDrafts = {
     ],
   ],
 
-  // Gustavo Ribeiro — Maverick Híbrida, dúvidas sobre bateria
+  // Gustavo Ribeiro — Maverick Hybrid, dúvidas sobre bateria
   '9BF-MAV24-K61': [
     [
       'Gustavo, sobre sua dúvida: a bateria híbrida da Maverick tem garantia própria e o diagnóstico completo só é feito na rede Ford.',
